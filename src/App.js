@@ -1,23 +1,92 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import './App.css';
 
 function App() {
-  let list = [1, 2, 3];
-  // let number = 1;
-  const [number, setNumber] = useState(1); //setNumber 로 변경함
+
+
+// 초기 값을 가져올 때 무거운 작업을 해야한다면 바로 안에 값을 넣어주는 것이 아니라 콜백 형태로 넣어주면 맨처음 화면이 렌더링 될때만 불러온다.
+  const heavyWork = () => {
+      console.log('엄청 무거운 작업');
+      return ['홍길동', '김민수'];
+  }
+
+  const [number, setNumber] = useState(1);
+  const [name, setName] = useState( () =>  { return heavyWork()});
+  const [input, setInput] = useState('');
+
+
+  useEffect(() => {
+      document.title = ` useEffect 사용 , 증가 ${number}`;
+      // useEffect 를 컴포넌드안에 불러오는 이유: effect를 통해 number state 에 접근
+      // 함수 범위 안에 존재하기 때문에 특별한 api 없이도 값을 얻을 수 있다.
+  })
+
+
+
+  const handleInputChange = (e) => {
+      setInput(e.target.value);
+      // console.log('이벤트 발생 ', input);
+  }
+
+  const handleUpdate = () => {
+    setName((prevState) => {
+        console.log('이전 state: ', prevState);
+        return[input, ...prevState];
+    })
+  }
+
   const add = () => {
-    setNumber(number + 1); //number 값 변경을 요청함
+    setNumber(number + 1);
+
+    let newNumber;
+    if(number >= 10){
+        newNumber = 1;
+    }else {
+        newNumber = number + 1;
+    }
+      setNumber(newNumber);
     console.log('add', setNumber);
   };
+
+  const minus = () => {
+      setNumber(number - 1);
+
+      let newNumber;
+      if(number < 1){
+          newNumber = 0;
+      }else {
+          newNumber  = number - 1;
+      }
+      setNumber(newNumber);
+      console.log('minus', setNumber);
+  };
+
+  const inputDelete = (e) =>{
+      console.log('삭제')
+  }
+
   return (
     <>
-      <div>{list.map((n) => n)}</div>
+
       {/* forEach 는 void  */}
 
       <div>
-        <h1>숫자: {number}</h1>
+        <h4>숫자: {number}</h4>
         <button onClick={add}>더하기</button>
+        <br/>
+        <button onClick={minus}>빼기 </button>
+        <br/>
+        <button onClick={()=> setNumber(number + 1)}>  useEffect 더하기  </button>
       </div>
+        <input type="text" value={input} onChange={handleInputChange}/>
+        <button onClick = {handleUpdate}>update </button>
+        {name.map((name, idx) => {
+              return <p key={idx} >{ name }  <button onClick={inputDelete}> 삭제</button> </p>;
+          })}
+        <div>{input}</div>
+
+
+
     </>
   );
 }

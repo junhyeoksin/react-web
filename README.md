@@ -1,4 +1,4 @@
-React Hooks
+React Hooks 공부한 내용
 
 * useState
 * useEffect

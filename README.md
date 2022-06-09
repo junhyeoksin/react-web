@@ -4,4 +4,4 @@ react Hooks
 * useEffect
 * useRef
 * useContext
-* useReucer
+* useReducer

@@ -1,4 +1,4 @@
-react Hooks
+React Hooks
 
 * useState
 * useEffect
